@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il Palio di Siena — demo — Il Palio di Siena (demo)</title>
+<meta name="description" content="Dimostrazione moderna dell'archivio ilpalio.org di Orlando Papei sul Palio di Siena.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="demo-banner">Dimostrazione non ufficiale — prototipo a scopo illustrativo. L'archivio ufficiale e completo è <a href="https://www.ilpalio.org/">ilpalio.org</a>.</div>
+<header class="site-header">
+  <div class="wrap header-in">
+    <a class="brand" href="index.html"><span class="brand-mark">&#9679;</span> Il Palio di Siena <em>demo</em></a>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="albo.html">Albo delle corse</a>
+      <a href="cose-il-palio.html">Cos'&egrave; il Palio</a>
+      <a href="contrade.html">Contrade</a>
+      <a href="english.html">English</a>
+    </nav>
+    <form class="searchbox" action="cerca.html" method="get" role="search">
+      <input type="search" name="q" placeholder="Cerca nel demo…" aria-label="Cerca">
+      <button type="submit">Cerca</button>
+    </form>
+  </div>
+</header>
+<main class="wrap">
+
+<section class="hero">
+  <p class="kicker">Dimostrazione · archivio ilpalio.org</p>
+  <h1>Il Palio di Siena,<br>dal 1633 a oggi</h1>
+  <p class="lede">Da decenni <strong>Orlando Papei</strong> raccoglie, dagli archivi di Stato e della Cattedrale, la storia della corsa più antica del mondo: oltre <strong>25.000 pagine</strong>, a disposizione di tutti, gratuitamente. Questo prototipo mostra come potrebbe apparire quell'archivio su uno schermo moderno.</p>
+  <div class="cta-row">
+    <a class="btn" href="albo.html">Esplora le corse</a>
+    <a class="btn ghost" href="cose-il-palio.html">Cos'è il Palio</a>
+  </div>
+</section>
+<section>
+  <h2>L'archivio in numeri</h2>
+  <div class="stats">
+    <div class="stat"><span class="num">25.000+</span><span class="lbl">pagine d'archivio</span></div>
+    <div class="stat"><span class="num">720</span><span class="lbl">schede di corsa</span></div>
+    <div class="stat"><span class="num">1633</span><span class="lbl">la corsa più antica</span></div>
+    <div class="stat"><span class="num">17</span><span class="lbl">Contrade</span></div>
+  </div>
+</section>
+<section>
+  <h2>Quattro secoli di corse</h2>
+  <div class="cards" id="home-races"></div>
+  <p><a href="albo.html">Tutte le schede del demo →</a></p>
+</section>
+<section>
+  <h2>Le sezioni</h2>
+  <div class="cards">
+    <a class="card" href="cose-il-palio.html"><h3>Cos'è il Palio</h3><p>La festa, la storia, le Contrade: la grande introduzione.</p></a>
+    <a class="card" href="contrade.html"><h3>Le Contrade</h3><p>Rivalità, stemmi e colori, titoli onorifici.</p></a>
+    <a class="card" href="english.html"><h3>English</h3><p>An introduction to the Palio for English readers.</p></a>
+  </div>
+</section>
+<section class="about">
+  <h2>Un archivio unico al mondo</h2>
+  <p>Il sito <a href="https://www.ilpalio.org/">ilpalio.org</a> è un'opera di volontariato pura: nessun banner pubblicitario, nessun scopo commerciale, solo la passione per Siena e la sua festa. Ogni pagina di questo prototipo è tratta dai contenuti originali di Orlando Papei, riprodotti con la sua autorizzazione.</p>
+</section>
+<script>document.getElementById('home-races').innerHTML = "<a class=\"card race-card\" href=\"corse/1633-08-15.html\"><img class="ci ci-minitartuca" alt=""><div><h3>15 agosto 1633</h3><p>Vince: <strong>TARTUCA</strong></p></div></a><a class=\"card race-card\" href=\"corse/1709-07-02.html\"><img class="ci ci-minionda" alt=""><div><h3>2 luglio 1709</h3><p>Vince: <strong>ONDA</strong></p></div></a><a class=\"card race-card\" href=\"corse/1806-07-03.html\"><img class="ci ci-minimontone" alt=""><div><h3>3 luglio 1806</h3><p>Vince: <strong>VALDIMONTONE</strong></p></div></a><a class=\"card race-card\" href=\"corse/1906-08-16.html\"><img class="ci ci-miniaquila" alt=""><div><h3>16 agosto 1906</h3><p>Vince: <strong>AQUILA</strong></p></div></a><a class=\"card race-card\" href=\"corse/2025-07-03.html\"><img class="ci ci-minioca" alt=""><div><h3>3 luglio 2025</h3><p>Vince: <strong>OCA</strong></p></div></a><a class=\"card race-card\" href=\"corse/2026-08-18.html\"><img class="ci ci-mininicchio" alt=""><div><h3>18 agosto 2026</h3><p>Vince: <strong>NICCHIO</strong></p></div></a>";</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Contenuti di <strong>Orlando Papei</strong> — <a href="https://www.ilpalio.org/">ilpalio.org</a>, riprodotti con autorizzazione · CC BY-NC</p>
+    <p class="fine">Prototipo dimostrativo non ufficiale · L’archivio ufficiale e completo è <a href="https://www.ilpalio.org/">ilpalio.org</a> · Pagina originale: consultare il sito ufficiale per la versione completa e aggiornata.</p>
+  </div>
+</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
