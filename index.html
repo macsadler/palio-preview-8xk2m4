@@ -1,76 +1,526 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Il Palio di Siena — demo — Il Palio di Siena (demo)</title>
-<meta name="description" content="Dimostrazione moderna dell'archivio ilpalio.org di Orlando Papei sul Palio di Siena.">
-<link rel="stylesheet" href="assets/style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Dimostrazione moderna dell'archivio del Palio di Siena di Orlando Papei (ilpalio.org): albo delle corse dal 1633 al 2026, schede delle Contrade e ricerca a testo pieno." />
+<link rel="icon" href="data:," />
+<title>Il Palio di Siena — demo dell'archivio di Orlando Papei</title>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#faf5ea; --bg2:#f3ead6; --surface:#fffdf7; --ink:#2c2115; --ink-soft:#5d4c36;
+    --line:#ddd0b4; --brick:#8f2f22; --brick-ink:#ffffff; --gold:#a87c24; --tufo:#b98d4f;
+    --chip:#efe4c9; --shadow:0 10px 30px rgba(60,40,10,.12);
+    --onda:#4a90b8; --tartuca:#c9a227; --aquila:#d9a514;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1c1610; --bg2:#241c13; --surface:#2a2115; --ink:#f0e6d2; --ink-soft:#c9b894;
+      --ink-soft:#c9b894; --line:#4a3b26; --brick:#c05340; --brick-ink:#fff7ec; --gold:#d3a94e; --tufo:#c49b58;
+      --chip:#3a2d1a; --shadow:0 10px 30px rgba(0,0,0,.45);
+    }
+  }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif; font-size:16.5px; line-height:1.6; }
+  h1,h2,h3,.serif{ font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; }
+  p{ margin:0 0 1em; }
+  a{ color:var(--brick); }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1060px; margin:0 auto; padding:0 18px; }
+
+  .demo-banner{ background:#2c2115; color:#f3e7c8; font-size:.86rem; text-align:center; padding:8px 14px; }
+  .demo-banner strong{ color:#eec96a; }
+
+  header.site{ position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .site-inner{ display:flex; align-items:center; gap:14px; padding:10px 0; flex-wrap:wrap; }
+  .brand{ font-family:"Iowan Old Style",Palatino,Georgia,serif; font-weight:700; font-size:1.22rem; color:var(--ink); text-decoration:none; letter-spacing:.01em; }
+  .brand span{ color:var(--brick); }
+  nav.main{ display:flex; gap:4px; flex-wrap:wrap; margin-left:auto; }
+  nav.main a{ color:var(--ink); text-decoration:none; font-size:.95rem; padding:7px 11px; border-radius:999px; }
+  nav.main a:hover{ background:var(--chip); }
+  nav.main a[aria-current="page"]{ background:var(--brick); color:var(--brick-ink); }
+
+  .view{ display:none; padding:26px 0 10px; animation:fade .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .view{ animation:none; } html{ scroll-behavior:auto; } }
+
+  .hero{ border-radius:18px; overflow:hidden; box-shadow:var(--shadow); border:1px solid var(--line); }
+  .hero img{ width:100%; height:auto; }
+  .hero-cap{ font-size:.82rem; color:var(--ink-soft); margin-top:8px; }
+  h1.page{ font-size:clamp(1.9rem,5.2vw,3rem); line-height:1.12; margin:.55em 0 .35em; font-weight:700; }
+  h2.sec{ font-size:clamp(1.35rem,3.4vw,1.8rem); margin:1.4em 0 .5em; line-height:1.2; }
+  .lede{ font-size:1.13rem; color:var(--ink-soft); max-width:44em; }
+  .rule{ height:3px; width:74px; background:var(--brick); border-radius:2px; margin:14px 0 4px; }
+
+  .stats{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:22px 0; }
+  @media (min-width:720px){ .stats{ grid-template-columns:repeat(4,1fr); } }
+  .stat{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .stat b{ display:block; font-family:Georgia,serif; font-size:1.7rem; color:var(--brick); line-height:1.1; }
+  .stat span{ font-size:.88rem; color:var(--ink-soft); }
+
+  .cards{ display:grid; gap:14px; margin:16px 0; }
+  @media (min-width:720px){ .cards{ grid-template-columns:1fr 1fr; } }
+  .cards.three{ }
+  @media (min-width:920px){ .cards.three{ grid-template-columns:repeat(3,1fr); } }
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; text-decoration:none; color:var(--ink); display:block; }
+  a.card:hover{ border-color:var(--tufo); box-shadow:var(--shadow); }
+  .card h3{ margin:.1em 0 .35em; font-size:1.18rem; line-height:1.25; }
+  .card p{ color:var(--ink-soft); font-size:.96rem; margin-bottom:.4em; }
+  .card .go{ color:var(--brick); font-weight:600; font-size:.92rem; }
+  .tag{ display:inline-block; font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--chip); color:var(--ink); padding:3px 9px; border-radius:999px; margin-bottom:8px; }
+  .tag.brick{ background:var(--brick); color:var(--brick-ink); }
+
+  .factbox{ background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:6px 18px; margin:18px 0; }
+  .factbox dl{ display:grid; grid-template-columns:110px 1fr; gap:2px 14px; margin:12px 0; }
+  .factbox dt{ font-weight:700; font-size:.9rem; color:var(--ink-soft); padding:5px 0; }
+  .factbox dd{ margin:0; padding:5px 0; border-bottom:1px dashed var(--line); }
+  .factbox dd:last-of-type{ border-bottom:none; }
+  @media (max-width:480px){ .factbox dl{ grid-template-columns:92px 1fr; } }
+
+  .swatches{ display:flex; gap:8px; margin:10px 0 4px; }
+  .sw{ width:34px; height:34px; border-radius:9px; border:1px solid rgba(0,0,0,.18); }
+
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; margin:14px 0; align-items:center; }
+  .toolbar label{ font-size:.9rem; font-weight:600; color:var(--ink-soft); }
+  select, input[type="search"], input[type="text"]{ font:inherit; font-size:1rem; padding:10px 12px; border-radius:10px;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink); }
+  input[type="search"]{ flex:1 1 220px; }
+  button.btn{ font:inherit; font-weight:600; background:var(--brick); color:var(--brick-ink); border:none;
+    padding:10px 18px; border-radius:10px; cursor:pointer; }
+  button.btn.ghost{ background:transparent; color:var(--brick); border:1.5px solid var(--brick); }
+
+  .albo-list{ display:flex; flex-direction:column; gap:8px; margin:10px 0 20px; }
+  .albo-row{ display:grid; grid-template-columns:118px 1fr; gap:4px 14px; background:var(--surface);
+    border:1px solid var(--line); border-radius:12px; padding:12px 16px; color:var(--ink); text-decoration:none; align-items:baseline; }
+  a.albo-row:hover{ border-color:var(--tufo); box-shadow:var(--shadow); }
+  .albo-row .date{ font-family:Georgia,serif; font-weight:700; color:var(--brick); font-size:.98rem; }
+  .albo-row .win{ font-weight:700; }
+  .albo-row .meta{ grid-column:2; color:var(--ink-soft); font-size:.9rem; }
+  .albo-row .sched{ grid-column:2; font-size:.85rem; color:var(--brick); font-weight:600; }
+  @media (max-width:520px){ .albo-row{ grid-template-columns:1fr; } .albo-row .meta,.albo-row .sched{ grid-column:1; } }
+
+  .crumbs{ font-size:.9rem; color:var(--ink-soft); margin-bottom:6px; }
+  .crumbs a{ text-decoration:none; }
+  .note{ background:var(--chip); border-radius:12px; padding:14px 16px; font-size:.95rem; margin:16px 0; }
+  .src{ font-size:.86rem; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:10px; margin-top:22px; }
+
+  .result{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+  .result h3{ margin:.1em 0 .3em; font-size:1.08rem; }
+  .result h3 a{ text-decoration:none; }
+  .result p{ color:var(--ink-soft); font-size:.94rem; margin:0; }
+  mark{ background:#f2d06b; color:#2c2115; padding:0 2px; border-radius:3px; }
+  @media (prefers-color-scheme: dark){ mark{ background:#8a6d1f; color:#fff3d6; } }
+
+  .contrade-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:14px 0; }
+  @media (min-width:720px){ .contrade-grid{ grid-template-columns:repeat(3,1fr); } }
+  .contrade-grid span{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:9px 12px; font-size:.95rem; }
+
+  footer.site{ border-top:1px solid var(--line); margin-top:34px; padding:22px 0 40px; background:var(--bg2); }
+  footer.site p{ font-size:.9rem; color:var(--ink-soft); max-width:60em; }
+  footer.site .attr{ color:var(--ink); font-weight:600; }
+  .foot-nav{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; font-size:.92rem; }
+  .foot-nav a{ text-decoration:none; }
+</style>
 </head>
 <body>
-<div class="demo-banner">Dimostrazione non ufficiale — prototipo a scopo illustrativo. L'archivio ufficiale e completo è <a href="https://www.ilpalio.org/">ilpalio.org</a>.</div>
-<header class="site-header">
-  <div class="wrap header-in">
-    <a class="brand" href="index.html"><span class="brand-mark">&#9679;</span> Il Palio di Siena <em>demo</em></a>
-    <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="albo.html">Albo delle corse</a>
-      <a href="cose-il-palio.html">Cos'&egrave; il Palio</a>
-      <a href="contrade.html">Contrade</a>
-      <a href="english.html">English</a>
+
+<div class="demo-banner">Dimostrazione non ufficiale — una vetrina di poche pagine. <strong>Non è l'archivio dal vivo</strong>: l'archivio completo resta su <a href="https://www.ilpalio.org" style="color:#eec96a">ilpalio.org</a>.</div>
+
+<header class="site">
+  <div class="wrap site-inner">
+    <a class="brand" href="#/home">Il Palio <span>di Siena</span></a>
+    <nav class="main" aria-label="Sezioni della demo">
+      <a href="#/home" data-nav="home">Home</a>
+      <a href="#/albo" data-nav="albo">Albo delle corse</a>
+      <a href="#/contrade" data-nav="contrade">Contrade</a>
+      <a href="#/info" data-nav="info">Cos'è il Palio</a>
+      <a href="#/cerca" data-nav="cerca">Cerca</a>
     </nav>
-    <form class="searchbox" action="cerca.html" method="get" role="search">
-      <input type="search" name="q" placeholder="Cerca nel demo…" aria-label="Cerca">
-      <button type="submit">Cerca</button>
-    </form>
   </div>
 </header>
+
 <main class="wrap">
 
-<section class="hero">
-  <p class="kicker">Dimostrazione · archivio ilpalio.org</p>
-  <h1>Il Palio di Siena,<br>dal 1633 a oggi</h1>
-  <p class="lede">Da decenni <strong>Orlando Papei</strong> raccoglie, dagli archivi di Stato e della Cattedrale, la storia della corsa più antica del mondo: oltre <strong>25.000 pagine</strong>, a disposizione di tutti, gratuitamente. Questo prototipo mostra come potrebbe apparire quell'archivio su uno schermo moderno.</p>
-  <div class="cta-row">
-    <a class="btn" href="albo.html">Esplora le corse</a>
-    <a class="btn ghost" href="cose-il-palio.html">Cos'è il Palio</a>
-  </div>
-</section>
-<section>
-  <h2>L'archivio in numeri</h2>
-  <div class="stats">
-    <div class="stat"><span class="num">25.000+</span><span class="lbl">pagine d'archivio</span></div>
-    <div class="stat"><span class="num">720</span><span class="lbl">schede di corsa</span></div>
-    <div class="stat"><span class="num">1633</span><span class="lbl">la corsa più antica</span></div>
-    <div class="stat"><span class="num">17</span><span class="lbl">Contrade</span></div>
-  </div>
-</section>
-<section>
-  <h2>Quattro secoli di corse</h2>
-  <div class="cards" id="home-races"></div>
-  <p><a href="albo.html">Tutte le schede del demo →</a></p>
-</section>
-<section>
-  <h2>Le sezioni</h2>
-  <div class="cards">
-    <a class="card" href="cose-il-palio.html"><h3>Cos'è il Palio</h3><p>La festa, la storia, le Contrade: la grande introduzione.</p></a>
-    <a class="card" href="contrade.html"><h3>Le Contrade</h3><p>Rivalità, stemmi e colori, titoli onorifici.</p></a>
-    <a class="card" href="english.html"><h3>English</h3><p>An introduction to the Palio for English readers.</p></a>
-  </div>
-</section>
-<section class="about">
-  <h2>Un archivio unico al mondo</h2>
-  <p>Il sito <a href="https://www.ilpalio.org/">ilpalio.org</a> è un'opera di volontariato pura: nessun banner pubblicitario, nessun scopo commerciale, solo la passione per Siena e la sua festa. Ogni pagina di questo prototipo è tratta dai contenuti originali di Orlando Papei, riprodotti con la sua autorizzazione.</p>
-</section>
-<script>document.getElementById('home-races').innerHTML = "<a class=\"card race-card\" href=\"corse/1633-08-15.html\"><img class="ci ci-minitartuca" alt=""><div><h3>15 agosto 1633</h3><p>Vince: <strong>TARTUCA</strong></p></div></a><a class=\"card race-card\" href=\"corse/1709-07-02.html\"><img class="ci ci-minionda" alt=""><div><h3>2 luglio 1709</h3><p>Vince: <strong>ONDA</strong></p></div></a><a class=\"card race-card\" href=\"corse/1806-07-03.html\"><img class="ci ci-minimontone" alt=""><div><h3>3 luglio 1806</h3><p>Vince: <strong>VALDIMONTONE</strong></p></div></a><a class=\"card race-card\" href=\"corse/1906-08-16.html\"><img class="ci ci-miniaquila" alt=""><div><h3>16 agosto 1906</h3><p>Vince: <strong>AQUILA</strong></p></div></a><a class=\"card race-card\" href=\"corse/2025-07-03.html\"><img class="ci ci-minioca" alt=""><div><h3>3 luglio 2025</h3><p>Vince: <strong>OCA</strong></p></div></a><a class=\"card race-card\" href=\"corse/2026-08-18.html\"><img class="ci ci-mininicchio" alt=""><div><h3>18 agosto 2026</h3><p>Vince: <strong>NICCHIO</strong></p></div></a>";</script>
+  <!-- ============ HOME ============ -->
+  <section class="view" id="view-home">
+    <div class="hero"><img src="assets/hero.webp" alt="Illustrazione in stile manifesto d'epoca: Piazza del Campo a Siena con i dieci cavalli in corsa, il Palazzo Pubblico, la Torre del Mangia e le bandiere delle Contrade" width="1920" height="1280" /></div>
+    <p class="hero-cap">Illustrazione originale per questa demo — Piazza del Campo, la conchiglia di tufo dove si corre dal 1633.</p>
+
+    <h1 class="page">Quattro secoli di corse, un solo archivio</h1>
+    <div class="rule"></div>
+    <p class="lede">Dal primo Palio «alla tonda» del 1633 alla Carriera del 2026: questa demo ricostruisce in forma moderna una piccola parte dell'archivio che <strong>Orlando Papei</strong> cura da decenni su ilpalio.org — oltre venticinquemila pagine no profit, senza pubblicità, autorizzate dal Consorzio per la Tutela del Palio di Siena, costruite a titolo gratuito e per pura passione.</p>
+    <p>Qui trovi l'albo delle corse in forma leggibile da telefono, sei schede complete che attraversano i secoli, tre Contrade raccontate e una ricerca che funziona su tutto il contenuto della demo. È un assaggio: l'archivio vero, con statistiche, documenti, curiosità e bibliografia, è e resta su <a href="https://www.ilpalio.org">ilpalio.org</a>.</p>
+
+    <div class="stats">
+      <div class="stat"><b>1633</b><span>primo Palio «alla tonda» documentato in Piazza del Campo</span></div>
+      <div class="stat"><b>17</b><span>Contrade di Siena — ne corrono dieci per volta</span></div>
+      <div class="stat"><b>3 giri</b><span>circa 90 secondi di corsa, a pelo, sul tufo del Campo</span></div>
+      <div class="stat"><b>25.000+</b><span>pagine nell'archivio di Orlando Papei su ilpalio.org</span></div>
+    </div>
+
+    <h2 class="sec">Le ultime Carriere</h2>
+    <div class="cards">
+      <a class="card" href="#/corsa/2026-07-03">
+        <span class="tag brick">3 luglio 2026 · Provenzano</span>
+        <h3>L'Aquila torna dopo 34 anni</h3>
+        <p>Giovanni Atzeni detto <em>Tittia</em> su Diodoro domina dal primo all'ultimo metro e riporta il drappellone nel Casato. L'ultima vittoria aquilina era del 3 luglio 1992, con Aceto.</p>
+        <span class="go">Leggi la scheda →</span>
+      </a>
+      <a class="card" href="#/albo">
+        <span class="tag">18 agosto 2026 · Assunta</span>
+        <h3>Il Nicchio e il «cappotto» di Tittia</h3>
+        <p>Il Nicchio, su Anda e Bola ancora con Tittia, vince dopo 28 anni (ultima nel 1998): per il fantino è la tredicesima vittoria e il cappotto personale nello stesso anno.</p>
+        <span class="go">Vai all'albo →</span>
+      </a>
+    </div>
+
+    <h2 class="sec">Esplora la demo</h2>
+    <div class="cards three">
+      <a class="card" href="#/albo"><h3>Albo delle corse</h3><p>L'elenco delle vittorie dal Seicento a oggi, con sei schede complete: 1633, 1713, 1802, 1837, 1992 e 2026.</p><span class="go">Apri l'albo →</span></a>
+      <a class="card" href="#/contrade"><h3>Le Contrade</h3><p>Onda, Tartuca e Aquila: colori, simboli, territorio e storia delle tre protagoniste di questa demo.</p><span class="go">Le schede →</span></a>
+      <a class="card" href="#/info"><h3>Cos'è il Palio</h3><p>Le due date, la tratta, le prove, la mossa, il cavallo scosso e il drappellone: la festa spiegata in una pagina.</p><span class="go">Leggi →</span></a>
+    </div>
+
+    <div class="note"><strong>Perché questa demo?</strong> Per mostrare come l'archivio di ilpalio.org potrebbe presentarsi in una forma moderna — veloce, leggibile su telefono, con ricerca interna — senza toccare l'originale. Nessun contenuto è stato copiato dal server dal vivo oltre le pagine pubbliche consultate per queste schede.</div>
+  </section>
+
+  <!-- ============ ALBO ============ -->
+  <section class="view" id="view-albo">
+    <h1 class="page">Albo delle corse</h1>
+    <div class="rule"></div>
+    <p class="lede">Le vittorie riconosciute dal Comune di Siena, dal primo Palio alla tonda ai giorni nostri. Le sei corse con la dicitura «Scheda completa» si aprono con vincitore, Contrada, cavallo, fantino e racconto; le altre sono le righe d'albo essenziali.</p>
+    <div class="toolbar">
+      <label for="f-century">Secolo</label>
+      <select id="f-century">
+        <option value="">Tutti i secoli</option>
+        <option value="17">XVII secolo</option>
+        <option value="18">XVIII secolo</option>
+        <option value="19">XIX secolo</option>
+        <option value="20">XX secolo</option>
+        <option value="21">XXI secolo</option>
+      </select>
+      <input type="search" id="f-text" placeholder="Filtra per Contrada, fantino o cavallo…" aria-label="Filtra l'albo" />
+    </div>
+    <div class="albo-list" id="albo-list"></div>
+    <p class="src">Avvertenza d'archivio: per i Palii anteriori al 1692 i verbali della Biccherna non esistono e le attribuzioni poggiano su cronache e studi successivi — Orlando Papei li ha analizzati documento per documento nel volume <em>I Palii con i cavalli fino al 1691</em> (ilpalio.org, 2016). L'archivio completo delle corse, anno per anno, è su <a href="https://www.ilpalio.org">ilpalio.org</a>.</p>
+  </section>
+
+  <!-- ============ CORSA (detail, filled by JS) ============ -->
+  <section class="view" id="view-corsa">
+    <p class="crumbs"><a href="#/albo">← Albo delle corse</a></p>
+    <div id="corsa-body"></div>
+  </section>
+
+  <!-- ============ CONTRADE index ============ -->
+  <section class="view" id="view-contrade">
+    <h1 class="page">Le Contrade</h1>
+    <div class="rule"></div>
+    <p class="lede">Siena è divisa in diciassette Contrade: popoli, territori, chiese e musei dentro le mura. In ogni Palio ne corrono dieci — le sette che non hanno corso l'anno precedente e tre estratte a sorte. In questa demo ne raccontiamo tre, le protagoniste delle schede corsa.</p>
+    <div class="cards three" id="contrade-cards"></div>
+    <h2 class="sec">Tutte le diciassette</h2>
+    <div class="contrade-grid">
+      <span>Aquila</span><span>Bruco</span><span>Chiocciola</span><span>Civetta</span><span>Drago</span><span>Giraffa</span>
+      <span>Istrice</span><span>Leocorno</span><span>Lupa</span><span>Nicchio</span><span>Oca</span><span>Onda</span>
+      <span>Pantera</span><span>Selva</span><span>Tartuca</span><span>Torre</span><span>Valdimontone</span>
+    </div>
+    <p class="src">Su <a href="https://www.ilpalio.org">ilpalio.org</a> ogni Contrada ha la sua sezione completa: vittorie, fantini, cavalli, statistiche e curiosità.</p>
+  </section>
+
+  <!-- ============ CONTRADA (detail, filled by JS) ============ -->
+  <section class="view" id="view-contrada">
+    <p class="crumbs"><a href="#/contrade">← Le Contrade</a></p>
+    <div id="contrada-body"></div>
+  </section>
+
+  <!-- ============ INFO ============ -->
+  <section class="view" id="view-info">
+    <h1 class="page">Cos'è il Palio</h1>
+    <div class="rule"></div>
+    <p class="lede">Non è uno spettacolo per turisti: è la festa di una città che si riconosce nelle sue diciassette Contrade. La corsa dura poco più di un minuto; la festa dura tutto l'anno.</p>
+
+    <h2 class="sec">Le due date</h2>
+    <p>Il Palio si corre due volte l'anno in Piazza del Campo: il <strong>2 luglio</strong>, in onore della Madonna di Provenzano (Palio di Provenzano), e il <strong>16 agosto</strong>, in onore della Madonna Assunta (Palio dell'Assunta). Le piogge possono rinviarlo di un giorno o due — è successo spesso, anche nel 2024, nel 2025 e nel 2026.</p>
+    <p>Le corse a cavallo a Siena sono attestate dal Duecento con il «Palio alla lunga», corso in linea attraverso la città. Il primo Palio <strong>«alla tonda»</strong>, in Piazza, è documentato nel <strong>1633</strong>: quell'anno, per la peste, i barberi delle corti italiane non poterono correre e la Balìa fece gareggiare i cavalli delle Contrade. Il Palio di luglio diventa annuale dal 1659; quello di agosto si stabilizza nel 1802, finanziato dal Comune.</p>
+
+    <h2 class="sec">Come si arriva alla corsa</h2>
+    <p><strong>L'estrazione.</strong> Delle diciassette Contrade ne corrono dieci: sette di diritto (quelle che non hanno corso l'edizione corrispondente dell'anno prima) e tre estratte a sorte in Palazzo Pubblico.</p>
+    <p><strong>La tratta.</strong> I cavalli vengono selezionati, visitati e assegnati a sorte alle dieci Contrade. È il cavallo, non il fantino, il cuore della festa: ogni Contrada lo accoglie nella propria stalla, lo veglia e lo porta in chiesa per la benedizione.</p>
+    <p><strong>Le prove.</strong> Nei giorni che precedono la Carriera si corrono sei prove, compresa la «provaccia» della mattina del Palio. Il fantino, professionista ingaggiato dalla Contrada, monta <strong>a pelo</strong>, senza sella.</p>
+    <p><strong>Il Corteo Storico.</strong> Prima della corsa, centinaia di figuranti in costume quattro-cinquecentesco sfilano intorno al Campo: alfieri con le bandiere, tamburini, il Carroccio e i cavalli delle Contrade.</p>
+
+    <h2 class="sec">La Carriera</h2>
+    <p>Nove cavalli si allineano fra i <strong>canapi</strong> nell'ordine estratto a sorte e tenuto segreto; il decimo, la «rincorsa», entra di corsa e dà di fatto il via. L'allineamento — la <strong>mossa</strong> — può durare minuti o un'ora, fra trattative e rivalità. Poi: <strong>tre giri</strong> del Campo ricoperto di tufo, in senso orario, per circa novanta secondi.</p>
+    <p>Vince il cavallo: se il fantino cade, il cavallo <strong>«scosso»</strong> può vincere da solo, e la vittoria è valida in tutto e per tutto — è accaduto molte volte, anche di recente (l'Oca all'Assunta 2023, con Zio Frac). Alla Contrada vincitrice va il <strong>drappellone</strong>, il grande stendardo dipinto per quella edizione, che entra nel museo della Contrada. I festeggiamenti durano settimane.</p>
+
+    <h2 class="sec">Piccolo glossario</h2>
+    <div class="factbox"><dl>
+      <dt>Barbero</dt><dd>il cavallo da Palio (dal nome dei cavalli berberi delle antiche corse).</dd>
+      <dt>Nonna</dt><dd>la Contrada che da più tempo non vince; dopo l'agosto 2026 è la Chiocciola.</dd>
+      <dt>Cappotto</dt><dd>vincere entrambi i Palii dello stesso anno (di una Contrada o, «personale», di un fantino).</dd>
+      <dt>Scosso</dt><dd>il cavallo che prosegue la corsa senza fantino.</dd>
+      <dt>Mossa</dt><dd>l'allineamento ai canapi e la partenza; la gestisce il mossiere dal verrocchio.</dd>
+      <dt>Drappellone</dt><dd>lo stendardo dipinto assegnato alla Contrada vincitrice, detto anche «il Palio».</dd>
+    </dl></div>
+    <p class="src">Per approfondire: la sezione storica e le statistiche complete dell'archivio di Orlando Papei su <a href="https://www.ilpalio.org">ilpalio.org</a>, autorizzato dal Consorzio per la Tutela del Palio di Siena.</p>
+  </section>
+
+  <!-- ============ CERCA ============ -->
+  <section class="view" id="view-cerca">
+    <h1 class="page">Cerca nell'archivio demo</h1>
+    <div class="rule"></div>
+    <p class="lede">Ricerca a testo pieno sulle pagine di questa demo: corse, Contrade e spiegazioni. Prova con «Tittia», «scosso», «1713» o «Tartuca».</p>
+    <form class="toolbar" id="search-form" role="search">
+      <input type="search" id="q" placeholder="Scrivi una parola chiave…" aria-label="Parola chiave" autocomplete="off" />
+      <button class="btn" type="submit">Cerca</button>
+    </form>
+    <div id="results" aria-live="polite"></div>
+    <p class="src">Nell'archivio dal vivo la ricerca indicizza oltre 25.000 pagine: <a href="https://www.ilpalio.org">ilpalio.org</a>.</p>
+  </section>
+
 </main>
-<footer class="site-footer">
+
+<footer class="site">
   <div class="wrap">
-    <p>Contenuti di <strong>Orlando Papei</strong> — <a href="https://www.ilpalio.org/">ilpalio.org</a>, riprodotti con autorizzazione · CC BY-NC</p>
-    <p class="fine">Prototipo dimostrativo non ufficiale · L’archivio ufficiale e completo è <a href="https://www.ilpalio.org/">ilpalio.org</a> · Pagina originale: consultare il sito ufficiale per la versione completa e aggiornata.</p>
+    <div class="foot-nav">
+      <a href="#/home">Home</a><a href="#/albo">Albo delle corse</a><a href="#/contrade">Contrade</a><a href="#/info">Cos'è il Palio</a><a href="#/cerca">Cerca</a>
+    </div>
+    <p class="attr">Contenuti di Orlando Papei — <a href="https://www.ilpalio.org">ilpalio.org</a>, riprodotti con autorizzazione.</p>
+    <p>Questa è una dimostrazione non ufficiale, realizzata a scopo di anteprima: non è il sito dal vivo e ne riproduce soltanto alcune pagine in forma ridisegnata. L'archivio completo — cronache, notizie, statistiche, documenti e bibliografia sul Palio di Siena dal 1633 a oggi — si trova su <a href="https://www.ilpalio.org">www.ilpalio.org</a>, sito no profit autorizzato dal Consorzio per la Tutela del Palio di Siena.</p>
   </div>
 </footer>
-<script src="assets/app.js"></script>
+
+<script>
+"use strict";
+/* ===== Dati: corse con scheda completa ===== */
+var RACES = [
+{ id:"1633-08", date:"Agosto 1633", label:"Palio dell'Assunta — primo «alla tonda»", winner:"Tartuca",
+  fantino:"non tramandato", cavallo:"non tramandato", secolo:17,
+  title:"Agosto 1633 · Vince la Tartuca",
+  body:[
+   "È la prima Carriera «alla tonda» documentata in Piazza del Campo, e per questo il punto di partenza convenzionale dell'archivio del Palio. Nel 1633 la peste impedì il tradizionale Palio dell'Assunta corso «alla lunga» dai barberi provenienti dalle corti italiane: la Balìa di Siena decise allora di far correre in Piazza, in tondo, i cavalli delle Contrade.",
+   "Vinse la Tartuca. Della vittoria resta una traccia documentaria preziosa: il drappellone rimase per anni nelle mani del capitano vittorioso, Giovanni Francesco Pollini, che nel 1663 la Contrada dovette riscattare perché creditore di parte delle spese della vittoria.",
+   "Di fantino e cavallo non esiste memoria certa — e l'archivio lo dice onestamente: i verbali ufficiali delle vittorie, redatti dai cancellieri della Biccherna, cominciano solo nel 1692. Per i Palii seicenteschi Orlando Papei ha vagliato cronache e manoscritti uno per uno, separando il documento dalla leggenda. Da questa corsa le Contrade tornarono in Piazza solo a intermittenza: la cadenza annuale arriverà nel 1659."],
+  facts:[["Data","Agosto 1633"],["Dedica","Madonna Assunta"],["Contrada","Tartuca"],["Fantino","Non tramandato con certezza"],["Cavallo","Non tramandato"],["Capitano","Giovanni Francesco Pollini"],["Note","Primo Palio «alla tonda» documentato"]] },
+{ id:"1713-08-16", date:"16 agosto 1713", label:"Palio dell'Assunta", winner:"Onda e Tartuca (a metà)",
+  fantino:"Cappellaro (Onda) · Ruglia (Tartuca)", cavallo:"Barberino (Onda) · Montalcino (Tartuca)", secolo:18,
+  title:"16 agosto 1713 · Il Palio vinto a metà",
+  body:[
+   "Il Palio dell'Assunta del 1713 finì in un arrivo controverso che tenne Siena col fiato sospeso per quasi un mese. Solo il 10 settembre 1713, al termine della vertenza, l'autorità — in presenza del cancelliere della Biccherna — assegnò la vittoria a metà fra due Contrade: un caso rimasto celebre e quasi unico nella storia della festa.",
+   "Per l'Onda vinse Giovan Battista Pistoi detto Cappellaro su Barberino; per la Tartuca Giovan Battista Papi detto Ruglia su Montalcino. Nell'albo senese questa è la ragione per cui i conteggi delle vittorie dell'Onda recano talvolta una «mezza» vittoria.",
+   "La doppia assegnazione divise il premio e raddoppiò le feste: due drappelloni morali, due rioni in giro per la città. A distanza di tre secoli resta la dimostrazione che al Palio, talvolta, neppure il traguardo basta a chiudere la contesa."],
+  facts:[["Data","16 agosto 1713 (assegnazione: 10 settembre 1713)"],["Dedica","Madonna Assunta"],["Contrade","Onda e Tartuca, a metà"],["Fantino Onda","Giovan Battista Pistoi detto Cappellaro"],["Cavallo Onda","Barberino"],["Fantino Tartuca","Giovan Battista Papi detto Ruglia"],["Cavallo Tartuca","Montalcino"]] },
+{ id:"1802-08-16", date:"16 agosto 1802", label:"Palio dell'Assunta", winner:"Onda",
+  fantino:"Matteo Marzi detto Mattiaccio", cavallo:"Novano", secolo:19,
+  title:"16 agosto 1802 · L'Onda e il primo Assunta stabile",
+  body:[
+   "Il 16 agosto 1802 vinse l'Onda, con Matteo Marzi detto Mattiaccio sul cavallo Novano. Ma il dato che fa entrare questa corsa negli annali non è il vincitore: è la sua cornice istituzionale.",
+   "Fu infatti il primo Palio di agosto interamente finanziato dal Comune di Siena. Fino ad allora la Carriera agostana si era corsa in modo irregolare, spesso per iniziativa e a spese di una Contrada che voleva celebrare una propria vittoria. Dal 1802 l'appuntamento del 16 agosto diventa stabile: nasce il ritmo moderno dei due Palii l'anno che Siena conosce ancora oggi.",
+   "Mattiaccio, fantino di primo piano fra Sette e Ottocento, firmò in quegli anni una lunga serie di vittorie per le Contrade più diverse: la sua firma in calce all'albo d'agosto è la firma giusta per un'edizione di svolta."],
+  facts:[["Data","16 agosto 1802"],["Dedica","Madonna Assunta"],["Contrada","Onda"],["Fantino","Matteo Marzi detto Mattiaccio"],["Cavallo","Novano"],["Note","Primo Palio d'agosto finanziato dal Comune: da qui l'Assunta diventa stabile"]] },
+{ id:"1837-08-16", date:"16 agosto 1837", label:"Palio dell'Assunta", winner:"Bruco",
+  fantino:"Francesco Santini detto Gobbo Saragiolo", cavallo:"Morello stella in fronte del Ceccarelli", secolo:19,
+  title:"16 agosto 1837 · Il Bruco all'ultima curva",
+  body:[
+   "Di questa corsa possediamo una cronaca quasi in diretta: il Diario Senese di Antonio Francesco Bandini, pubblicato integralmente su ilpalio.org. Alla mossa scappò prima la Tartuca; passò poi avanti il Nicchio, che condusse fino a San Martino, mentre la Pantera con Ferrino si manteneva in testa al gruppo.",
+   "Il Bruco, partito ultimo e senza speroni con il fantino Chiarini secondo il diario — la vittoria è però accreditata nell'albo al Gobbo Saragiolo, Francesco Santini, sul Morello stella in fronte del Ceccarelli — rimontò una a una le Contrade davanti. «Se si dovea correre altro poco sicuramente era il vincitore», annota Bandini: all'ultima girata, con una buona voltata a San Martino, il cavallo del Bruco non fu più raggiunto.",
+   "Fu una delle tante vittorie ottocentesche del Gobbo Saragiolo, il fantino dominante della prima metà del secolo, capace di vincere per mezza Siena. E nessuno cadde, chiude il diarista: «niuno sconcerto» — cronaca di un Palio pulito e combattuto fino all'ultimo metro."],
+  facts:[["Data","16 agosto 1837"],["Dedica","Madonna Assunta"],["Contrada","Bruco"],["Fantino","Francesco Santini detto Gobbo Saragiolo"],["Cavallo","Morello stella in fronte del Ceccarelli"],["Fonte","Diario Senese di Antonio Francesco Bandini (ilpalio.org)"]] },
+{ id:"1992-07-03", date:"3 luglio 1992", label:"Palio di Provenzano", winner:"Aquila",
+  fantino:"Andrea Degortes detto Aceto", cavallo:"Galleggiante", secolo:20,
+  title:"3 luglio 1992 · Aceto chiude un'epoca",
+  body:[
+   "Il 3 luglio 1992 l'Aquila vinse il Palio di Provenzano con Andrea Degortes detto Aceto su Galleggiante. Per il fantino sardo fu la quattordicesima vittoria — il record assoluto della Piazza — e anche l'ultima: si chiudeva la carriera del più grande fantino del Novecento paliesco.",
+   "Nessuno allora poteva sapere che quel drappellone sarebbe rimasto l'ultimo del millennio per l'Aquila, e ben oltre: la Contrada del Casato sarebbe diventata la «nonna» di Siena, la più a digiuno di tutte.",
+   "Il conto si è chiuso solo trentaquattro anni dopo, il 3 luglio 2026 — stesso Palio, stessa data — quando un altro sardo, Tittia, ha riportato la vittoria nel Casato su Diodoro, arrivando a dodici sigilli: a due dal record di Aceto."],
+  facts:[["Data","3 luglio 1992"],["Dedica","Madonna di Provenzano"],["Contrada","Aquila"],["Fantino","Andrea Degortes detto Aceto"],["Cavallo","Galleggiante"],["Note","14ª e ultima vittoria di Aceto, record della Piazza"]] },
+{ id:"2026-07-03", date:"3 luglio 2026", label:"Palio di Provenzano (corso il 3 per pioggia)", winner:"Aquila",
+  fantino:"Giovanni Atzeni detto Tittia", cavallo:"Diodoro", secolo:21,
+  title:"3 luglio 2026 · L'Aquila dopo 34 anni",
+  body:[
+   "Trentaquattro anni di attesa si sono sciolti sul tufo di Piazza del Campo. Il Palio di Provenzano 2026, rinviato dal 2 al 3 luglio per la pioggia, è stato dominato dal primo all'ultimo metro da Giovanni Atzeni detto Tittia su Diodoro, castrone baio di sette anni: la venticinquesima vittoria dell'Aquila, la prima dal 3 luglio 1992 — la stessa data — quando vinse Aceto su Galleggiante.",
+   "Mentre l'Onda, di rincorsa, faticava a dare la mossa e la Torre marcava stretta l'avversaria Oca, Tittia è scattato in testa e non ha lasciato spazio a nessuno: per lui è il dodicesimo successo in carriera; per Diodoro è la seconda vittoria in Piazza, dopo il Palio di Provenzano 2025 vinto con l'Oca e con lo stesso Tittia.",
+   "Con la vittoria dell'Aquila il titolo di «nonna» passa al Nicchio, a digiuno dal 1998 — un digiuno che si interromperà poche settimane dopo, all'Assunta 2026, ancora per mano di Tittia. Il drappellone di questa edizione è opera di Ismaele Nones."],
+  facts:[["Data","3 luglio 2026 (rinviato dal 2 per pioggia)"],["Dedica","Madonna di Provenzano"],["Contrada","Aquila"],["Fantino","Giovanni Atzeni detto Tittia"],["Cavallo","Diodoro"],["Drappellone","Ismaele Nones"],["Note","25ª vittoria dell'Aquila; 12ª personale di Tittia"]] }
+];
+
+/* ===== Albo: righe essenziali aggiuntive (vincitore, fantino, cavallo) ===== */
+var ALBO_EXTRA = [
+ {date:"2 luglio 1659", winner:"Istrice", fantino:"attribuzione incerta (Mone / Pavolino)", cavallo:"Leprino di Buonconvento", note:"Primo Palio interamente organizzato dalla Biccherna", secolo:17},
+ {date:"2 luglio 1696", winner:"Lupa", fantino:"Giuseppe Galardi detto Pelliccino", cavallo:"Pecoraio", secolo:17},
+ {date:"2 luglio 1701", winner:"Oca", fantino:"Giuseppe Galardi detto Pelliccino", cavallo:"Cervio", secolo:18},
+ {date:"2 luglio 1761", winner:"Civetta", fantino:"Domenico Franceschini detto Bechino II", cavallo:"Sauro dell'oste delle Donzelle", note:"Cappotto civettino (anche il 16 agosto)", secolo:18},
+ {date:"2 luglio 1779", winner:"Onda", fantino:"Mattia Mancini detto Bastiancino", cavallo:"Stornello del Ricci", note:"Cappotto ondaiolo (anche il 16 agosto)", secolo:18},
+ {date:"2 luglio 1823", winner:"Chiocciola", fantino:"Francesco Santini detto Gobbo Saragiolo", cavallo:"Baio scuro del Pagliai", secolo:19},
+ {date:"16 agosto 1850", winner:"Chiocciola", fantino:"Antonio Guasqui detto Folaghino", cavallo:"Morello del Cianchelli", note:"Cappotto della Chiocciola", secolo:19},
+ {date:"16 agosto 1998", winner:"Nicchio", fantino:"Dario Colagè detto Bufera", cavallo:"Re Artù", note:"Ultima vittoria del Nicchio prima del 2026", secolo:20},
+ {date:"16 agosto 2023", winner:"Oca", fantino:"Carlo Sanna detto Brigante (caduto: cavallo scosso)", cavallo:"Zio Frac", note:"Vince il cavallo scosso", secolo:21},
+ {date:"4 luglio 2024", winner:"Onda", fantino:"Carlo Sanna detto Brigante", cavallo:"Tabacco", note:"Palio di Provenzano rinviato di due giorni per pioggia", secolo:21},
+ {date:"17 agosto 2024", winner:"Lupa", fantino:"Dino Pes detto Velluto", cavallo:"Benitos", note:"Palio dell'Assunta rinviato per pioggia", secolo:21},
+ {date:"3 luglio 2025", winner:"Oca", fantino:"Giovanni Atzeni detto Tittia", cavallo:"Diodoro", note:"Palio di Provenzano rinviato per maltempo", secolo:21},
+ {date:"16 agosto 2025", winner:"Valdimontone", fantino:"Giuseppe Zedda detto Gingillo", cavallo:"Anda e Bola", secolo:21},
+ {date:"18 agosto 2026", winner:"Nicchio", fantino:"Giovanni Atzeni detto Tittia", cavallo:"Anda e Bola", note:"Assunta rinviata al 18 per pioggia; Tittia cade all'arrivo dopo la vittoria — cappotto personale", secolo:21}
+];
+
+/* ===== Contrade con scheda ===== */
+var CONTRADE = [
+{ id:"onda", name:"Contrada Capitana dell'Onda", short:"Onda", colors:["#f4f6f7","#57a8cf"], colorNames:"bianco e celeste",
+  symbol:"un'onda con un delfino coronato", territorio:"Malborghetto, nel Terzo di San Martino, a sud del Campo",
+  body:[
+   "L'Onda è la Contrada Capitana: il titolo le viene dall'antico ruolo militare della sua compagnia. Il suo popolo vive intorno a Malborghetto, nelle vie che dal Campo scendono verso Porta Romana, e la sua chiesa è San Giuseppe.",
+   "È protagonista di due delle schede di questa demo: la vittoria «a metà» del 16 agosto 1713, divisa con la Tartuca dopo un mese di vertenza, e quella del 16 agosto 1802, il primo Palio d'agosto finanziato dal Comune che rese stabile l'appuntamento dell'Assunta.",
+   "In tempi recenti l'Onda ha vinto il Provenzano del 4 luglio 2024 — rinviato di due giorni per la pioggia — con Carlo Sanna detto Brigante su Tabacco, alla prima vittoria dopo sette partecipazioni. La sua rivale storica è la Torre."],
+  facts:[["Colori","Bianco e celeste"],["Simbolo","Onda e delfino coronato"],["Territorio","Malborghetto (Terzo di San Martino)"],["Chiesa","San Giuseppe"],["Titolo","Contrada Capitana"],["Rivale","Torre"],["Ultima vittoria in demo","4 luglio 2024 — Brigante su Tabacco"]] },
+{ id:"tartuca", name:"Contrada della Tartuca", short:"Tartuca", colors:["#e8c33a","#274b8f"], colorNames:"giallo e turchino",
+  symbol:"una tartaruga", territorio:"Castelvecchio, il colle più antico di Siena",
+  body:[
+   "La Tartuca abita Castelvecchio, il nucleo più antico della città, e porta in bandiera una tartaruga gialla in campo turchino. La sua chiesa è Sant'Antonio da Padova.",
+   "Nell'albo del Palio la Tartuca occupa la prima riga: fu lei a vincere, nell'agosto 1633, il primo Palio «alla tonda» documentato in Piazza del Campo — la corsa da cui l'archivio di Orlando Papei fa cominciare la storia moderna della festa.",
+   "Tre secoli di albo la vedono anche co-protagonista dell'episodio più singolare del Settecento: il Palio dell'Assunta 1713, assegnato a metà fra Tartuca e Onda il 10 settembre di quell'anno."],
+  facts:[["Colori","Giallo e turchino"],["Simbolo","Tartaruga"],["Territorio","Castelvecchio"],["Chiesa","Sant'Antonio da Padova"],["Primato","Vincitrice del primo Palio «alla tonda» (1633)"],["Pagina singolare","Il Palio «a metà» del 1713 con l'Onda"]] },
+{ id:"aquila", name:"Nobile Contrada dell'Aquila", short:"Aquila", colors:["#e3ac12","#1c1c1c","#57a8cf"], colorNames:"giallo oro con liste nere e celesti",
+  symbol:"un'aquila bicipite coronata, con sole, scettro e globo", territorio:"il Casato di Sotto, nel Terzo di Città",
+  body:[
+   "L'Aquila è una delle quattro Nobili Contrade di Siena. Il suo rione è il Casato di Sotto, la lunga via che dal Campo scende verso sud, e il suo stemma — l'aquila bicipite coronata concessa, secondo la tradizione, dall'imperatore Carlo V — è il più araldico della festa. La sua rivale è la Pantera.",
+   "La sua storia recente è una parabola perfetta del Palio: la vittoria del 3 luglio 1992 con Aceto su Galleggiante, poi trentaquattro anni di digiuno che ne fecero la «nonna» di Siena, e infine la liberazione del 3 luglio 2026, stessa data, con Tittia su Diodoro: la venticinquesima vittoria della sua storia.",
+   "Poche settimane dopo, all'Assunta 2026, il testimone di «nonna» è passato al Nicchio — che lo ha a sua volta deposto vincendo quella stessa sera. Al Palio nessuno resta nonna per sempre."],
+  facts:[["Colori","Giallo oro, liste nere e celesti"],["Simbolo","Aquila bicipite coronata"],["Territorio","Casato di Sotto (Terzo di Città)"],["Titolo","Nobile Contrada"],["Rivale","Pantera"],["Vittorie","25 (al luglio 2026)"],["Il digiuno","Dal 1992 al 2026: 34 anni da «nonna»"]] }
+];
+
+/* ===== Rendering albo ===== */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function alboRows(){
+  var rows = [];
+  RACES.forEach(function(r){ rows.push({date:r.date, winner:r.winner, fantino:r.fantino, cavallo:r.cavallo, note:r.label, secolo:r.secolo, id:r.id, year:parseInt(r.id,10)||parseInt(r.date.replace(/\D/g," ").trim().split(" ").pop(),10)}); });
+  ALBO_EXTRA.forEach(function(r){ rows.push({date:r.date, winner:r.winner, fantino:r.fantino, cavallo:r.cavallo, note:r.note||"", secolo:r.secolo, id:null, year:parseInt(r.date.replace(/\D/g," ").trim().split(" ").pop(),10)}); });
+  rows.sort(function(a,b){ return a.year-b.year; });
+  return rows;
+}
+function renderAlbo(){
+  var century = document.getElementById("f-century").value;
+  var q = (document.getElementById("f-text").value||"").toLowerCase();
+  var html = "";
+  alboRows().forEach(function(r){
+    if(century && String(r.secolo)!==century) return;
+    var hay = (r.date+" "+r.winner+" "+r.fantino+" "+r.cavallo+" "+r.note).toLowerCase();
+    if(q && hay.indexOf(q)===-1) return;
+    var inner = '<span class="date">'+esc(r.date)+'</span><span class="win">'+esc(r.winner)+'</span>'+
+      '<span class="meta">Fantino: '+esc(r.fantino)+' · Cavallo: '+esc(r.cavallo)+(r.note?' · '+esc(r.note):"")+'</span>'+
+      (r.id?'<span class="sched">Scheda completa →</span>':"");
+    html += r.id ? '<a class="albo-row" href="#/corsa/'+r.id+'">'+inner+'</a>' : '<div class="albo-row">'+inner+'</div>';
+  });
+  document.getElementById("albo-list").innerHTML = html || '<p>Nessuna corsa corrisponde ai filtri.</p>';
+}
+
+/* ===== Rendering schede ===== */
+function factsHtml(facts){
+  var h = '<div class="factbox"><dl>';
+  facts.forEach(function(f){ h += '<dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd>'; });
+  return h + '</dl></div>';
+}
+function renderCorsa(id){
+  var r = null;
+  RACES.forEach(function(x){ if(x.id===id) r = x; });
+  var el = document.getElementById("corsa-body");
+  if(!r){ el.innerHTML = '<h1 class="page">Scheda non trovata</h1><p>Torna all\'<a href="#/albo">albo delle corse</a>.</p>'; return; }
+  var h = '<span class="tag brick">'+esc(r.label)+'</span><h1 class="page">'+esc(r.title)+'</h1><div class="rule"></div>' + factsHtml(r.facts);
+  r.body.forEach(function(p){ h += '<p>'+p+'</p>'; });
+  h += '<p class="src">Scheda dimostrativa tratta dalle pagine pubbliche dell\'archivio di Orlando Papei e dall\'Albo delle vittorie del Comune di Siena. La scheda completa, con tutte le Contrade partecipanti e le statistiche, è su <a href="https://www.ilpalio.org">ilpalio.org</a>.</p>';
+  el.innerHTML = h;
+}
+function renderContrade(){
+  var h = "";
+  CONTRADE.forEach(function(c){
+    h += '<a class="card" href="#/contrada/'+c.id+'"><span class="tag">'+esc(c.colorNames)+'</span><h3>'+esc(c.name)+'</h3><p>Simbolo: '+esc(c.symbol)+'. Territorio: '+esc(c.territorio)+'.</p><span class="go">La scheda →</span></a>';
+  });
+  document.getElementById("contrade-cards").innerHTML = h;
+}
+function renderContrada(id){
+  var c = null;
+  CONTRADE.forEach(function(x){ if(x.id===id) c = x; });
+  var el = document.getElementById("contrada-body");
+  if(!c){ el.innerHTML = '<h1 class="page">Contrada non trovata</h1><p>Torna all\'<a href="#/contrade">elenco delle Contrade</a>.</p>'; return; }
+  var sw = ""; c.colors.forEach(function(col){ sw += '<span class="sw" style="background:'+col+'"></span>'; });
+  var h = '<h1 class="page">'+esc(c.name)+'</h1><div class="rule"></div><div class="swatches" aria-hidden="true">'+sw+'</div>' + factsHtml(c.facts);
+  c.body.forEach(function(p){ h += '<p>'+p+'</p>'; });
+  h += '<p class="src">Scheda dimostrativa. La sezione completa della Contrada — vittorie, fantini, cavalli e statistiche — è su <a href="https://www.ilpalio.org">ilpalio.org</a>.</p>';
+  el.innerHTML = h;
+}
+
+/* ===== Ricerca a testo pieno ===== */
+function corpus(){
+  var docs = [];
+  docs.push({href:"#/home", title:"Home — Quattro secoli di corse, un solo archivio", text:"archivio Orlando Papei ilpalio.org venticinquemila pagine no profit Consorzio Tutela Palio Siena demo albo contrade"});
+  docs.push({href:"#/albo", title:"Albo delle corse", text:"elenco vittorie Comune di Siena dal 1633 a oggi Biccherna albo vittorie secolo filtri"});
+  docs.push({href:"#/info", title:"Cos'è il Palio", text:"Provenzano Assunta 2 luglio 16 agosto tratta prove Corteo Storico mossa canapi tre giri cavallo scosso drappellone barbero nonna cappotto glossario estrazione rincorsa mossiere verrocchio"});
+  RACES.forEach(function(r){
+    docs.push({href:"#/corsa/"+r.id, title:r.title, text:(r.date+" "+r.winner+" "+r.fantino+" "+r.cavallo+" "+r.body.join(" ")).replace(/<[^>]+>/g,"")});
+  });
+  ALBO_EXTRA.forEach(function(r){
+    docs.push({href:"#/albo", title:"Albo — "+r.date+": vince "+r.winner, text:(r.date+" "+r.winner+" "+r.fantino+" "+r.cavallo+" "+(r.note||""))});
+  });
+  CONTRADE.forEach(function(c){
+    docs.push({href:"#/contrada/"+c.id, title:c.name, text:(c.colorNames+" "+c.symbol+" "+c.territorio+" "+c.body.join(" ")).replace(/<[^>]+>/g,"")});
+  });
+  return docs;
+}
+function doSearch(q){
+  var box = document.getElementById("results");
+  q = (q||"").trim();
+  if(!q){ box.innerHTML = ""; return; }
+  var terms = q.toLowerCase().split(/\s+/);
+  var hits = [];
+  corpus().forEach(function(d){
+    var hay = (d.title+" "+d.text).toLowerCase();
+    var ok = terms.every(function(t){ return hay.indexOf(t)>-1; });
+    if(ok) hits.push(d);
+  });
+  if(!hits.length){ box.innerHTML = '<div class="result"><h3>Nessun risultato per «'+esc(q)+'»</h3><p>Prova con un nome di Contrada, un fantino (Tittia, Aceto, Brigante), un cavallo (Diodoro, Tabacco) o un anno (1633, 1713, 2026).</p></div>'; return; }
+  var h = '<p style="color:var(--ink-soft)">'+hits.length+(hits.length===1?" risultato":" risultati")+' per «'+esc(q)+'»</p>';
+  hits.forEach(function(d){
+    var text = d.text;
+    var low = text.toLowerCase(), pos = -1;
+    terms.forEach(function(t){ var p = low.indexOf(t); if(p>-1 && (pos===-1 || p<pos)) pos = p; });
+    var snip = text;
+    if(pos>40){ snip = "…"+text.slice(pos-40); }
+    snip = snip.slice(0, 220) + (snip.length>=220 ? "…" : "");
+    terms.forEach(function(t){
+      snip = snip.replace(new RegExp("("+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"), "<mark>$1</mark>");
+    });
+    h += '<div class="result"><h3><a href="'+d.href+'">'+esc(d.title)+'</a></h3><p>'+snip+'</p></div>';
+  });
+  box.innerHTML = h;
+}
+
+/* ===== Router ===== */
+var VIEWS = ["home","albo","corsa","contrade","contrada","info","cerca"];
+function route(){
+  var hash = location.hash.replace(/^#\/?/, "");
+  var parts = hash.split("/");
+  var name = parts[0] || "home";
+  if(VIEWS.indexOf(name)===-1) name = "home";
+  VIEWS.forEach(function(v){ document.getElementById("view-"+v).classList.toggle("active", v===name); });
+  var navKey = name==="corsa" ? "albo" : (name==="contrada" ? "contrade" : name);
+  var links = document.querySelectorAll("nav.main a");
+  for(var i=0;i<links.length;i++){ if(links[i].getAttribute("data-nav")===navKey) links[i].setAttribute("aria-current","page"); else links[i].removeAttribute("aria-current"); }
+  if(name==="corsa") renderCorsa(parts[1]);
+  if(name==="contrada") renderContrada(parts[1]);
+  if(name==="albo") renderAlbo();
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+document.getElementById("f-century").addEventListener("change", renderAlbo);
+document.getElementById("f-text").addEventListener("input", renderAlbo);
+document.getElementById("search-form").addEventListener("submit", function(e){ e.preventDefault(); doSearch(document.getElementById("q").value); });
+document.getElementById("q").addEventListener("input", function(){ doSearch(this.value); });
+renderContrade();
+route();
+</script>
 </body>
 </html>
